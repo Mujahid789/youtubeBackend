@@ -21,6 +21,9 @@ app.get('/user', (req, res) => {
     res.send(`i am mujahid`);
     // res.send(`user ${req.params.id}`)
   })
+  app.use('/user/profile/:userName', (req,res)=>{
+    res.send(`user profile is ${req.params.userName}`);
+})
 
 
 export {app}
