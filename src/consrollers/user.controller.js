@@ -18,7 +18,7 @@ const registerUser = asyncHandler (async(req, res)=>{
     // check fro user creation
     // return response
 
-
+    
     const {userName,email,fullName,password}=req.body
    
     if(
@@ -30,7 +30,7 @@ const registerUser = asyncHandler (async(req, res)=>{
         }
     
     
-       const existedUser= User.findOne({
+       const existedUser=await User.findOne({
             $or : [{ userName }, { email }]
         })
         if (existedUser){
@@ -38,14 +38,22 @@ const registerUser = asyncHandler (async(req, res)=>{
         }
         console.log("req.files : ", req.files);
         const avatarLocalPath = req.files?.avatar[0]?.path;
-        const coverImgLocalPath = req.files?.coverImage[0]?.path
+        // const coverImgLocalPath = req.files?.coverImage[0]?.path;
+         
+
+        let coverImgLocalPath;
+        if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length >0){
+             coverImgLocalPath = req.files.coverImage[0].path
+        }
+
+        
 
         if(!avatarLocalPath){
             throw new ApiError(400, "avatar file is required")
         }
-
+     // if local path is nothing then return empty string
       const avatar = await uploadOnCloudinay(avatarLocalPath);
-      const coverImage =await uploadOnCloudinay(coverImgLocalPath);
+      const coverImage = await uploadOnCloudinay(coverImgLocalPath); 
 
       if(!avatar){
         throw new ApiError(400, "avatar file is required");
