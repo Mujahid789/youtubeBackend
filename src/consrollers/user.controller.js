@@ -54,12 +54,8 @@ const registerUser = asyncHandler (async(req, res)=>{
             throw new ApiError(409, "User already exist " )
         }
         // console.log("req.files : ", req.files);
-       
-        const avatarLocalPath = req.files?.avatar[0]?.path;
-
+         const avatarLocalPath = req.files?.avatar[0]?.path;
         // const coverImgLocalPath = req.files?.coverImage[0]?.path;
-         
-
         let coverImgLocalPath;
         if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length >0){
              coverImgLocalPath = req.files.coverImage[0].path
@@ -244,7 +240,7 @@ const changeCurrentPassword = asyncHandler(async(req,res)=>{
 const getCurrentUser = asyncHandler(async(req,res)=>{
   return res
   .status(200)
-  .json(200, req.user, "User fctched")
+  .json(new ApiResponse(200, req.user, "User fctched"))
 })
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
@@ -323,6 +319,7 @@ const updateCoverImage = asyncHandler(async(req,res)=>{
 
 const getUserChannelProfile = asyncHandler(async(req,res)=>{
 
+  console.log("req.params : ", req.params);
   const {username}=req.params;
   if(!username?.trim()){
     throw new ApiError(400, "User is missing")
@@ -363,7 +360,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
           $cond:{
             if:{$in:[req.user?._id, "$subscribers.subscriber"]},
             then: true,
-            else: flase
+            else: false
           }
         }
       }
