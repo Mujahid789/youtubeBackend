@@ -4,6 +4,8 @@ import {
     publishVideo,
     getVideoById,
     updateVideo,
+    deleteVideo,
+    togglePublishStatus
     
 } from "../consrollers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -42,7 +44,10 @@ videoRouter.route("/updateVideo/:videoId").patch(
     ]) ,
     verifyJWT,
      updateVideo
-)
+) 
+
+videoRouter.route("/deleteVideo/:videoId").delete(verifyJWT, deleteVideo)
+
 
 
 

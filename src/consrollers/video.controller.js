@@ -148,7 +148,25 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+    const userId =req.user?._id
     //TODO: delete video
+    if(!videoId){
+        throw new ApiError(400, "video not found")
+    }
+
+    const video =await Video.findById(videoId)
+
+    if(!(userId.equals(video.owner))){
+        throw new ApiError(401, "Unauthorized Access")
+    }
+    const result = await Video.deleteOne(video)
+
+    return res.
+    status(200)
+    .json(
+        new ApiResponse(200, result, "document deleted successfully")
+    )
+
 })
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
